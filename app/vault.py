@@ -2,12 +2,13 @@ import re
 
 class VaultEntry:
     def __init__(self, site: str, username: str) -> None:
-        self._site = site
-        self._username = username
+        self.site = site
+        self.username = username
         
     @property
     def username(self) -> str: # username getter
         return self._username
+    
     @username.setter # username setter
     def username(self, username: str) -> None: #validatig username/no whitespace
         if not username.strip():
@@ -38,7 +39,7 @@ class VaultEntry:
         return f"username : {self.username}"
     
     def __repr__(self):
-        return f"VaultEntry('username': {self.username})"
+        return f"VaultEntry('site'= {self.site}, 'username': {self.username},)"
     
 
 # print(hashlib.sha256("Password".encode()).hexdigest())

@@ -7,14 +7,14 @@ class ApiEntry(PasswordEntry):
 
 
     def check_pawned(self):
-        prefix = self.password_hash[:5]
-        suffix = self.password_hash[5:].upper()
+        prefix = self.sha1_hash[:5].upper()
+        suffix = self.sha1_hash[5:].upper()
 
 
         url = f"https://api.pwnedpasswords.com/range/{prefix}"
 
         try:
-            res = requests.get(url)
+            res = requests.get(url, timeout=3)
             res.raise_for_status()
 
         except requests.exceptions.Timeout:
@@ -41,10 +41,25 @@ class ApiEntry(PasswordEntry):
                 return int(count)
         
         print("Password not found in breaches.")
+        
+
         return 0
         
-d = ApiEntry("github.com", "bluerabbit@icloud.com", "password")
-d.check_pawned()
+def main():
+    tests = [
+        "password",
+        "123456",
+        "passwoerd123",
+        "XyZ!9KjdshhiHDIUW?&%Hkhdanafkjn"
+    ]
+
+    for test in tests:
+        print(f"Testing: {test}")
+        entry = ApiEntry("test.com", "user123", test)
+        entry.check_pawned()
+
+if __name__ == '__main__':
+    main()
 
 
 
