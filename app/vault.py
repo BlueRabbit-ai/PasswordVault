@@ -1,6 +1,6 @@
 import re
 
-class VaultEnry:
+class VaultEntry:
     def __init__(self, site: str, username: str) -> None:
         self._site = site
         self._username = username
@@ -14,7 +14,7 @@ class VaultEnry:
             raise ValueError("Field 'username' must be a non-empty string of min. 5 characters")
         elif len(username.strip()) < 5:
             raise ValueError("Username must be at least 5 characters long")
-        self.username = username
+        self._username = username
 
     @property
     def site(self) -> str:
@@ -24,7 +24,7 @@ class VaultEnry:
     def site(self, site: str) -> None:
         if not site.strip():
             raise ValueError("Field 'site' should be a non-empty string")
-        elif not self.validate_site():
+        elif not self.validate_site(site):
             raise ValueError("Invalid site format")
         self._site = site
 
