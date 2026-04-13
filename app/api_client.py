@@ -1,7 +1,7 @@
 import requests
 from entries import PasswordEntry
 
-class ApiEntry:
+class ApiEntry(PasswordEntry):
     def __init__(self, site, username, password):
         super().__init__(site, username, password)
 

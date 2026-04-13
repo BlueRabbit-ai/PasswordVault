@@ -1,11 +1,10 @@
 from vault import VaultEntry
-from api_client import ApiEntry
 import hashlib
 import datetime
 
 class PasswordEntry(VaultEntry):
     def __init__(self,site: str, username: str, password:str, ) -> None:
-        self._password = password
+        self.password = password
         self.created_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         super().__init__(site, username)
 
