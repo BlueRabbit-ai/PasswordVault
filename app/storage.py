@@ -15,14 +15,26 @@ def load_data(filepath):
     except FileNotFoundError:
         return []
     
-def save_data(data, filepath="/data/vault.json"):
+def save_data(data, filepath=data_path):
     with open(filepath, "w") as f:
         json.dump(data, f, indent=2)
 
-def destroy(filepath):
+def destroy(filepath=data_path):
     with open(filepath, "w") as f:
-        f.write([])
+        f.write("[]")
 
-def delete():
-    data = load_data("/data/vault.json")
-    # remove = 
+def delete(index: int):
+    data = load_data(data_path) #delete entries
+    
+    if not data:
+        print("Vault is empty")
+        return False
+    
+    if index < 0 or index >= len(data):
+        print("Invalid index")
+
+    removed = data.pop(index)
+    save_data(data, data_path)
+
+    print(f"Deleted entry: {removed['site']} ({removed['username']})")
+    return True

@@ -1,5 +1,5 @@
 import requests
-from entries import PasswordEntry
+from app.entries import PasswordEntry
 
 class ApiEntry(PasswordEntry):
     def __init__(self, site, username, password):
@@ -49,7 +49,7 @@ class ApiEntry(PasswordEntry):
     
     def to_dict(self):
         return {
-            "site": self.name,
+            "site": self.site,
             "username": self.username,
             "password_hash": self.password_hash
         }
@@ -57,9 +57,12 @@ class ApiEntry(PasswordEntry):
     @classmethod
     def from_dict(cls, my_dict):
         try:
-            site = my_dict["site"]
-            username = my_dict["username"]
-            password = my_dict["password_hash"]
+            obj = cls.__new__(cls)  # bypass __init__
+            obj.site = my_dict["site"]
+            obj.username = my_dict["username"]
+            obj._password_hash = my_dict["password_hash"]
+            obj._sha1_hash = None  # can't recover
+            return obj
         except KeyError:
             print("Error! Make sure your dictionary has this keys: 'site', 'username', 'password_hash'")
 
