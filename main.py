@@ -2,6 +2,7 @@ from app.api_client import ApiEntry
 from app.storage import load_data, save_data, data_path
 from auth import unlock
 
+
 def load_entries():
     raw = load_data(data_path)
     entries = []

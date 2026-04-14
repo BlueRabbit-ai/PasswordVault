@@ -11,6 +11,10 @@ class ApiEntry(PasswordEntry):
 
 
     def check_pawned(self):
+        if not self.sha1_hash:
+            print("Cannot check stored (hashed-only) password.")
+            return None
+        
         prefix = self.sha1_hash[:5].upper()
         suffix = self.sha1_hash[5:].upper()
 
@@ -40,7 +44,7 @@ class ApiEntry(PasswordEntry):
         hashes = (line.split(":") for line in res.text.splitlines())
 
         for h, count in hashes:
-            if h == suffix:
+            if h.strip().upper() == suffix:
                 print(f"Password found {count} times!")
                 return int(count)
         
