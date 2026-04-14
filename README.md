@@ -36,6 +36,13 @@ password_vault/
 ├── auth.py
 ├── setup.py
 └── README.md
+
+classes:
+
+VaultEntry
+    └── PasswordEntry
+            └── ApiEntry
+
 ```
 
 ***

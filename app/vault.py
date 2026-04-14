@@ -36,7 +36,7 @@ class VaultEntry:
 
     
     def __str__(self) -> str:
-        return f"username : {self.username}"
+        return f"site: {self.site},username : {self.username}"
     
     def __repr__(self):
         return f"VaultEntry('site'= {self.site}, 'username': {self.username},)"
