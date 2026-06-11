@@ -1,24 +1,36 @@
 import hashlib
 from getpass import getpass
-from pathlib import Path
-from app.storage import load_data, destroy, data_path
-from setup import setup  # import setup
-
-profile_path = Path("data/profiles.json")
+from app.storage import load_data, profile_path
+from setup import setup
 
 
-def unlock():
-    # If no profile → run setup
+def _ensure_profile():
+    """Ensure a valid profile exists. Returns the profile data or None if setup was cancelled."""
     if not profile_path.exists():
         print("No profile found. Starting setup...\n")
-        setup()
+        if not setup():
+            return None
 
     profile = load_data(profile_path)
 
     if not profile:
         print("Profile corrupted. Recreating...")
-        setup()
+        if not setup():
+            return None
         profile = load_data(profile_path)
+
+    if not profile:
+        print("Failed to create profile.")
+        return None
+
+    return profile
+
+
+def unlock():
+    profile = _ensure_profile()
+    if profile is None:
+        print("Cannot unlock without a profile. Exiting.")
+        return False
 
     stored_hash = profile[0]["master_key"]
 
@@ -32,15 +44,10 @@ def unlock():
             return True
 
         tries += 1
-        print("Invalid master key!")
+        remaining = 3 - tries
+        if remaining > 0:
+            print(f"Invalid master key! {remaining} attempt(s) remaining.")
 
-    # Too many tries → WIPE + RESET
-    print("\nToo many attempts!")
-    print("Vault will be wiped and reset.\n")
-
-    destroy(data_path)
-
-    # FORCE NEW SETUP
-    setup()
-
-    return True  # allow app to continue after reset
+    # Too many tries — lock out, do NOT wipe
+    print("\nToo many failed attempts. Access denied.")
+    return False

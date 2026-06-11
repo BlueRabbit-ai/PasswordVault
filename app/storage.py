@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
 
-base = Path(__file__).resolve().parent
-data_path = base.parent / "data" / "vault.json"
+_base = Path(__file__).resolve().parent.parent  # project root
+_data_dir = _base / "data"
+data_path = _data_dir / "vault.json"
+profile_path = _data_dir / "profiles.json"
 
 
 def load_data(filepath=data_path):
@@ -35,19 +37,3 @@ def destroy(filepath=data_path):
         json.dump([], f, indent=2)
 
 
-def delete(index: int):
-    data = load_data(data_path)
-
-    if not data:
-        print("Vault is empty")
-        return False
-
-    if index < 0 or index >= len(data):
-        print("Invalid index")
-        return False
-
-    removed = data.pop(index)
-    save_data(data, data_path)
-
-    print(f"Deleted entry: {removed['site']} ({removed['username']})")
-    return True

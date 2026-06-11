@@ -1,10 +1,6 @@
 import hashlib
 from getpass import getpass
-from pathlib import Path
-from app.storage import save_data
-
-profile_path = Path("data/profiles.json")
-vault_path = Path("data/vault.json")
+from app.storage import save_data, profile_path, data_path as vault_path
 
 
 def setup():
@@ -21,7 +17,7 @@ def setup():
 
         if confirm != "YES":
             print("Setup cancelled.")
-            return
+            return False
 
     # Create master password
     while True:
@@ -59,6 +55,7 @@ def setup():
         print("Vault NOT cleared.")
 
     print("\nSetup complete. You can now use the vault.")
+    return True
 
 
 if __name__ == "__main__":

@@ -5,12 +5,12 @@ import datetime
 
 class PasswordEntry(VaultEntry):
     def __init__(self, site: str, username: str, password: str) -> None:
+        super().__init__(site, username)  # validate site/username first
         self._set_password(password)
         self.created_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        super().__init__(site, username)
 
     def __str__(self):
-        return f"PasswordEntry('site': {self.site}, 'username': {self.username}, 'password_hash': {self.password_hash})"
+        return f"{self.site} ({self.username})"
 
     def _set_password(self, password: str):
         if not password.strip():
@@ -31,7 +31,9 @@ class PasswordEntry(VaultEntry):
         return {
             "site": self.site,
             "username": self.username,
-            "password_hash": self.password_hash
+            "password_hash": self.password_hash,
+            "sha1_hash": self.sha1_hash,
+            "created_at": self.created_at,
         }
 
     @classmethod
@@ -41,8 +43,8 @@ class PasswordEntry(VaultEntry):
             obj.site = my_dict["site"]
             obj.username = my_dict["username"]
             obj._password_hash = my_dict["password_hash"]
-            obj._sha1_hash = None
-            obj.created_at = None
+            obj._sha1_hash = my_dict.get("sha1_hash", None)
+            obj.created_at = my_dict.get("created_at", None)
             return obj
         except KeyError:
             print("Invalid dictionary format")

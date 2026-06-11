@@ -47,6 +47,7 @@ def main():
             try:
                 entry = ApiEntry(site, username, password)
                 entries.append(entry)
+                save_entries(entries)
                 print("Entry added.")
             except Exception as e:
                 print(f"Error: {e}")
@@ -70,6 +71,7 @@ def main():
 
             if 0 <= index < len(entries):
                 removed = entries.pop(index)
+                save_entries(entries)
                 print(f"Deleted: {removed.site}")
             else:
                 print("Invalid index.")
@@ -84,7 +86,7 @@ def main():
             index = int(index)
 
             if 0 <= index < len(entries):
-                entries[index].check_pawned()
+                entries[index].check_pwned()
             else:
                 print("Invalid index.")
 
